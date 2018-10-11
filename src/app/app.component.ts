@@ -1,10 +1,48 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
+import { Store, select } from "@ngrx/store";
+import { Observable } from "rxjs";
+import { INCREMENT, DECREMENT, RESET } from "./reducers/counter";
+import { Todo } from "./reducers/todo";
+
+interface AppState {
+  count: number;
+}
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  selector: "app-root",
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.css"]
 })
 export class AppComponent {
-  title = 'todo';
+  count$: Observable<number>;
+  todos$: Observable<Todo>;
+
+  constructor(private store: Store<AppState>) {
+    this.count$ = store.pipe(select("count"));
+    this.todos$ = store.pipe(select("todos"));
+    store.subscribe(todo => console.log(todo));
+  }
+
+  increment() {
+    this.store.dispatch({ type: INCREMENT });
+  }
+
+  decrement() {
+    this.store.dispatch({ type: DECREMENT });
+  }
+
+  reset() {
+    this.store.dispatch({ type: RESET });
+  }
+
+  completeTodo(id) {
+    this.store.dispatch({ type: "COMPLETE_TODO", payload: { id } });
+  }
+  deleteTodo(id) {
+    this.store.dispatch({ type: "DELETE_TODO", payload: { id } });
+  }
+
+  createTodo(text) {
+    this.store.dispatch({ type: "ADD_TODO", payload: { text } });
+  }
 }
