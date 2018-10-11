@@ -3,6 +3,7 @@ import { Store, select } from "@ngrx/store";
 import { Observable } from "rxjs";
 import { INCREMENT, DECREMENT, RESET } from "./reducers/counter";
 import { Todo } from "./reducers/todo";
+import { TodosService } from "./todos.service";
 
 interface AppState {
   count: number;
@@ -17,10 +18,16 @@ export class AppComponent {
   count$: Observable<number>;
   todos$: Observable<Todo>;
 
-  constructor(private store: Store<AppState>) {
+  constructor(
+    private store: Store<AppState>,
+    private todosServise: TodosService
+  ) {
     this.count$ = store.pipe(select("count"));
     this.todos$ = store.pipe(select("todos"));
-    store.subscribe(todo => console.log(todo));
+
+    todosServise.todos.subscribe(payload =>
+      this.store.dispatch({ type: "INITIALIZE_TODO", payload })
+    );
   }
 
   increment() {

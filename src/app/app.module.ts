@@ -1,5 +1,6 @@
 import { BrowserModule } from "@angular/platform-browser";
 import { NgModule } from "@angular/core";
+import { HttpClientModule } from "@angular/common/http";
 import { StoreModule } from "@ngrx/store";
 
 import { AppComponent } from "./app.component";
@@ -10,6 +11,7 @@ import { todoReducer } from "./reducers/todo";
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    HttpClientModule,
     StoreModule.forRoot({ count: counterReducer, todos: todoReducer })
   ],
   providers: [],

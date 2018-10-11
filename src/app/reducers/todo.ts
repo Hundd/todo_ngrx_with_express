@@ -7,13 +7,10 @@ export interface Todo {
 }
 
 interface TodoAction extends Action {
-  payload: Todo;
+  payload: Todo | Todo[];
 }
 
-const initialState: Todo[] = [
-  { id: 0, text: "learn ngrx" },
-  { id: 1, text: "learn rxjs" }
-];
+const initialState: Todo[] = [];
 
 let lastIndex = Math.max(...initialState.map(({ id }) => id));
 
@@ -23,17 +20,26 @@ const todoReducer: ActionReducer<Todo[], TodoAction> = function todoReducer(
 ) {
   console.log(action);
   switch (action.type) {
+    case "INITIALIZE_TODO":
+      return action.payload as Todo[];
+
     case "ADD_TODO":
-      const { text } = action.payload;
+      const { text } = action.payload as Todo;
+
       return allTodo.concat([{ text, id: ++lastIndex }]);
+
     case "DELETE_TODO":
-      return allTodo.filter(todo => todo.id !== action.payload.id);
+      return allTodo.filter(
+        (todo: Todo) => todo.id !== (action.payload as Todo).id
+      );
+
     case "COMPLETE_TODO":
       return allTodo.map(todo => {
-        return todo.id === action.payload.id
+        return todo.id === (action.payload as Todo).id
           ? { ...todo, ...{ completed: true } }
           : todo;
       });
+
     default:
       return allTodo;
   }
