@@ -8,14 +8,14 @@
 <hr>
 <h1>TOD App</h1>
 
-<form (submit)="createTodo(todoName.value); todoName.value = ''">
+<form (ngSubmit)="createTodo(todoName.value); todoName.value = ''">
   <input type="text" #todoName>
   <button type="submit">Add todo</button>
 </form>
 
 <ul>
   <li *ngFor='let todo of todos$ | async' >
-    <a href="#" (click)="completeTodo(todo.id)">{{ todo.text }}</a>
+    {{ todo.text }}
     <span *ngIf="todo.completed" [ngStyle]="{color: 'green'}">(completed)</span>
     <div>
       <button (click)="completeTodo(todo.id)">Complete</button>
